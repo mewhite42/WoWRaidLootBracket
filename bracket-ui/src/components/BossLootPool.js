@@ -8,38 +8,21 @@ import {
   RadioGroup,
 } from "@material-ui/core";
 
-const useStyles = makeStyles({
-  root: {
-    minWidth: 275,
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-});
 
 const nums = [
-  "zero",
-  "one",
-  "two",
-  "three",
-  "four",
-  "five",
-  "six",
-  "seven",
-  "eight",
-  "nine",
+  "Any Number",
+  "One",
+  "Two",
+  "Three",
+  "Four",
+  "Five",
+  "Six",
+  "Seven",
+  "Eight",
+  "Nine",
 ];
 
 const BossLootPool = (props) => {
-  const classes = useStyles();
 
   const [state, setState] = React.useState({});
 
@@ -58,8 +41,7 @@ const BossLootPool = (props) => {
         props.handleChange(props.lootPool.Name, choices)
     }
   };
-
-  const FormControls = props.lootPool.Drops.map((item, index) => {
+  const FormControls = props.lootPool.Drops.sort().map((item, index) => {
     return (
       <FormControlLabel
         control={
@@ -67,6 +49,7 @@ const BossLootPool = (props) => {
             checked={state[item] || false}
             onChange={handleChange}
             name={item}
+            color="primary"
           />
         }
         label={item}
@@ -84,9 +67,8 @@ const BossLootPool = (props) => {
   return (
     <FormControl
       required
-      error={count!==props.lootPool.Quant}
+      error={count!==props.lootPool.Quant&&props.lootPool.Quant!==0}
       component="fieldset"
-      className={classes.formControl}
     >
       <FormLabel component="legend">
         {"Select " + nums[props.lootPool.Quant]}

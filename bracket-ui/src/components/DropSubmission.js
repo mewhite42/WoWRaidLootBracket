@@ -3,14 +3,12 @@ import axios from "axios";
 import {
   Grid,
   makeStyles,
-  TextField,
   Card,
   CardContent,
   Button,
 } from "@material-ui/core";
 import { Redirect } from 'react-router-dom';
 import BossLoot from "./BossLoot";
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,36 +41,11 @@ const RaidBracket = (props) => {
     setChoices({ ...choices, [bossPool]: lootChoices });
   };
 
-  const updateName = (event) => {
-    setChoices({ ...choices, Name: event.target.value });
-  };
-
   const submit = () => {
+        choices.Name = "Drops"; 
         axios.post("http://localhost:4000/submitBet/", choices).then((response) => {
           setRedirect(true);
         });;
-  };
-
-  const checkCompletion = () => {
-    if (
-      choices.Name === undefined ||
-      choices.Name === "" ||
-      choices.Name === null
-    ) {
-      return false;
-    }
-
-    return raid.bosses.every((boss) => {
-      return boss.LootPools.every((lootPool) => {
-        if (
-          lootPool.Quant !== 0 &&
-          (choices[lootPool.Name] === undefined ||
-          choices[lootPool.Name].length !== lootPool.Quant)
-        )
-          return false;
-        else return true;
-      });
-    });
   };
 
   const bosses = raid.bosses || [];
@@ -91,21 +64,13 @@ const RaidBracket = (props) => {
             <Card className={classes.root}>
               <CardContent>
                 <Grid container justify="center" spacing={4}>
-                  <Grid key="Name" item>
-                    <TextField
-                      id="standard-basic"
-                      label="Charecter Name"
-                      onChange={updateName}
-                    />
-                  </Grid>
                   <Grid key="Submit" item>
                     <Button
                       variant="contained"
                       color="primary"
-                      disabled={!checkCompletion()}
                       onClick={submit}
                     >
-                      Submit Bracket
+                      Submit Drops
                     </Button>
                     {renderRedirect()}
                   </Grid>
