@@ -4,18 +4,19 @@ const request = require("request");
 
 const mariadb = require("mariadb");
 const pool = mariadb.createPool({
-  host: "localhost",
+  host: "dagenhad.ddns.net",
   user: "root",
   password: "D@g3nhad",
   database: "wowbracket",
   connectionLimit: 1,
-  idleTimeout: 30
+  idleTimeout: 5
 });
 
 /**
  * Gets a JSON Object of the a raid structure
  */
 module.exports.raidLoot = async (event, context, callback) => {
+  try {
   var raidObject = {};
   let conn = await pool.getConnection();
   let rows = await conn.query("SELECT * from RAIDS where Raid_Name = 'Blackwing Lair'");
@@ -70,14 +71,13 @@ module.exports.raidLoot = async (event, context, callback) => {
       body: JSON.stringify(raidObject),
       isBase64Encoded: false,
     };
-
     await conn.end();
-    await pool.end();
-    callback(null, response);
-
-        
-
-
+    console.log(raidObject);
+    return response;
+  }
+  catch(e){
+    console.log(e);
+  }
 };
 
 
