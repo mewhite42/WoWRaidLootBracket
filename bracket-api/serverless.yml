@@ -1,4 +1,4 @@
-service: dhs-code-assessment-api
+service: RaidLootBracket
 
 plugins:
   - serverless-offline

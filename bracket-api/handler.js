@@ -81,7 +81,7 @@ module.exports.raidLoot = async (event, context, callback) => {
 };
 
 
-module.exports.submitBet = (event, context, callback) => {
+module.exports.submitBet = async (event, context, callback) => {
   var raidObject = {};
   console.log(event.body);
 
@@ -89,37 +89,34 @@ module.exports.submitBet = (event, context, callback) => {
   var thursday = new Date();    
   thursday.setDate(thursday.getDate() + (+(4-thursday.getDay())) % 7);
 
-  pool
-    .getConnection()
-    .then((conn) => {
-      Object.keys(submission).forEach((key) => {
-        if (key !== "Name")
-          submission[key].forEach((item) => {
-            conn.query("INSERT INTO submissions value (?, ?, ?, ?)", [
-              submission.Name,
-              thursday,
-              key,
-              item,
-            ]);
-          });
-      });
+  var raidObject = {};
+  let conn = await pool.getConnection();
+  var i;
 
-      let response = {
-        statusCode: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Conrol-Allow-Methods": "OPTIONS,GET,POST",
-        },
-        body: "Submission Successful",
-        isBase64Encoded: false,
-      };
-      console.log("ended");
-      conn.release();
-      callback(null, response);
-    })
-    .catch((err) => {
-      console.log(err);
-      //not connected
+  for(i=0; i < Object.keys(submission).length; i++ )
+  {
+    var key = Object.keys(submission)[i];
+    if (key !== "Name")
+    submission[key].forEach((item) => {
+      await conn.query("INSERT INTO submissions value (?, ?, ?, ?)", [
+        submission.Name,
+        thursday,
+        key,
+        item,
+      ]);
     });
+  }
+
+  let response = {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Conrol-Allow-Methods": "OPTIONS,GET,POST",
+    },
+    body: "Submission Successful",
+    isBase64Encoded: false,
+  };
+  conn.release();
+  return response;
 };
