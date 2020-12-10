@@ -24,7 +24,7 @@ const SiteHeader = (props) => {
   return (
     <AppBar position="static">
         <Typography variant="h3" className={classes.title} align="center">
-          Sundies BWL Loot Bracket
+          Sundies Loot Bracket
         </Typography>
     </AppBar>
   );
