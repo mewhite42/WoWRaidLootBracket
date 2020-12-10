@@ -19,11 +19,11 @@ module.exports.raidLoot = async (event, context, callback) => {
   try {
   var raidObject = {};
   let conn = await pool.getConnection();
-  let rows = await conn.query("SELECT * from RAIDS where Raid_Name = 'Blackwing Lair'");
+  let rows = await conn.query("SELECT * from RAIDS where RAID_ID = 'AQ40'");
 
   raidObject.RaidName = rows[0].Raid_Name;
   rows = await conn.query(
-      "SELECT b.Boss_Name, b.BossOrder, l.Loot_Pool_ID, l.Quant, PI.item FROM bosses b INNER JOIN loot_pools l ON l.Boss=b.Boss_ID INNER JOIN pool_items pi ON PI.Pool=l.Loot_Pool_ID WHERE raid = 'BWL' ORDER BY BossOrder, Loot_Pool_ID"
+      "SELECT b.Boss_Name, b.BossOrder, l.Loot_Pool_ID, l.Quant, PI.item FROM bosses b INNER JOIN loot_pools l ON l.Boss=b.Boss_ID INNER JOIN pool_items pi ON PI.Pool=l.Loot_Pool_ID WHERE raid = 'AQ40' ORDER BY BossOrder, Loot_Pool_ID"
     )
 
     var currentBoss = "";
@@ -91,20 +91,20 @@ module.exports.submitBet = async (event, context, callback) => {
 
   var raidObject = {};
   let conn = await pool.getConnection();
-  var i;
+  var i, j;
 
   for(i=0; i < Object.keys(submission).length; i++ )
   {
     var key = Object.keys(submission)[i];
     if (key !== "Name")
-    submission[key].forEach((item) => {
+    for(j = 0; j < submission[key].length; j++){
       await conn.query("INSERT INTO submissions value (?, ?, ?, ?)", [
         submission.Name,
         thursday,
         key,
-        item,
+        submission[key][j],
       ]);
-    });
+    }
   }
 
   let response = {

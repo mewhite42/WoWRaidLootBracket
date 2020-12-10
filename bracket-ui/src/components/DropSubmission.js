@@ -32,7 +32,7 @@ const RaidBracket = (props) => {
   const [choices, setChoices] = useState({});
 
   useEffect(() => {
-    axios.get("https://g1wzmbjhr4.execute-api.us-east-1.amazonaws.com/v1/raidLoot/").then((response) => {
+    axios.get("localhost:4000/raidLoot/").then((response) => {
       setRaid(response.data);
     });
   }, []);
@@ -43,7 +43,7 @@ const RaidBracket = (props) => {
 
   const submit = () => {
         choices.Name = "Drops"; 
-        axios.post("https://g1wzmbjhr4.execute-api.us-east-1.amazonaws.com/v1/submitBet/", choices).then((response) => {
+        axios.post("localhost:4000/submitBet/", choices).then((response) => {
           setRedirect(true);
         });;
   };
